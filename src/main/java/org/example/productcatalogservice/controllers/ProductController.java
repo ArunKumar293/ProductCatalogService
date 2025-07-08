@@ -6,9 +6,7 @@ import org.example.productcatalogservice.models.Category;
 import org.example.productcatalogservice.models.Product;
 import org.example.productcatalogservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +38,34 @@ public class ProductController {
 
     }
 
+    public Product ProductDTOtoProduct(ProductDTO productDTO){
+        Product product = new Product();
+        product.setId(productDTO.getId());
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setImageUrl(productDTO.getImageURL());
+        if(productDTO.getCategoryDTO() != null){
+            Category category = new Category();
+            category.setId(productDTO.getCategoryDTO().getId());
+            category.setName(productDTO.getCategoryDTO().getName());
+            category.setDescription(productDTO.getCategoryDTO().getDescription());
+            product.setCategory(category);
+        }
+
+        return product;
+    }
+
     @GetMapping("/products")
     public List<ProductDTO> getProducts() {
-        List<ProductDTO> products = new ArrayList<>();
 
-        //dummy product
-        ProductDTO product = new ProductDTO();
-        product.setId(1L);
-        product.setName("Product 1");
-        product.setDescription("Description 1");
+        List<Product> products = productService.GetAllProducts();
 
-        products.add(product);
-
-        return products;
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productDTOs.add(ProductToProductDTO(product));
+        }
+        return productDTOs;
     }
 
     @GetMapping("/products/{id}")
@@ -61,4 +74,30 @@ public class ProductController {
         Product product = productService.GetProductById(id);
         return  ProductToProductDTO(product);
     }
+
+    @PostMapping("/products")
+    public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
+        Product product = ProductDTOtoProduct(productDTO);
+        Product addedProduct = productService.AddProduct(product);
+        if(addedProduct != null){
+            return ProductToProductDTO(addedProduct);
+        }
+        return null;
+    }
+
+    @PutMapping("/products/{id}")
+    public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        Product product = ProductDTOtoProduct(productDTO);
+        Product updatedProduct = productService.UpdateProduct(product);
+        if(updatedProduct != null){
+            return ProductToProductDTO(updatedProduct);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/products/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.DeleteProduct(id);
+    }
+
 }

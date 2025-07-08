@@ -22,22 +22,22 @@ public class FakeStoreProductService implements  IProductService{
 
     @Override
     public List<Product> GetAllProducts() {
-        return List.of();
+        return fakeStoreAPIClient.GetAllProducts();
     }
 
     @Override
-    public void AddProduct(Product product) {
-
+    public Product AddProduct(Product product) {
+        return fakeStoreAPIClient.AddProduct(product);
     }
 
     @Override
-    public void UpdateProduct(Product product) {
-
+    public Product UpdateProduct(Product product) {
+        return fakeStoreAPIClient.UpdateProduct(product);
     }
 
     @Override
-    public void DeleteProduct(Product product) {
-
+    public void DeleteProduct(Long productId) {
+        fakeStoreAPIClient.DeleteProduct(productId);
     }
 
 }
