@@ -110,7 +110,7 @@ public class FakeStoreAPIClient {
         HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO, headers);
 
         ResponseEntity<FakeStoreProductDTO> fakeStoreProductDTOResponseEntity = restTemplate.exchange(
-                "https://fakestoreapi.com/products"+product.getId(),
+                "https://fakestoreapi.com/products/"+product.getId(),
                 HttpMethod.PUT,
                 requestEntity,
                 FakeStoreProductDTO.class

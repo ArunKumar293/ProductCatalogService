@@ -71,6 +71,10 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ProductDTO getProduct(@PathVariable Long id) {
 
+        if(id <= 0)
+        {
+            throw new IllegalArgumentException("Product id must be greater than 0");
+        }
         Product product = productService.GetProductById(id);
         return  ProductToProductDTO(product);
     }
