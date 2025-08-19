@@ -8,8 +8,8 @@ import lombok.Setter;
 
 import java.util.Locale;
 
-@Setter
 @Getter
+@Setter
 @Entity
 public class Product extends BaseModel {
 

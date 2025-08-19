@@ -76,6 +76,11 @@ public class ProductController {
             throw new IllegalArgumentException("Product id must be greater than 0");
         }
         Product product = productService.GetProductById(id);
+
+        if(product == null){
+            throw new NullPointerException("Product not found");
+        }
+
         return  ProductToProductDTO(product);
     }
 
