@@ -6,6 +6,9 @@ import org.example.productcatalogservice.models.Category;
 import org.example.productcatalogservice.models.Product;
 import org.example.productcatalogservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -69,19 +72,22 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ProductDTO getProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id) {
 
         if(id <= 0)
         {
             throw new IllegalArgumentException("Product id must be greater than 0");
         }
+
         Product product = productService.GetProductById(id);
 
         if(product == null){
             throw new NullPointerException("Product not found");
         }
 
-        return  ProductToProductDTO(product);
+        ProductDTO productDTO = ProductToProductDTO(product);
+
+        return  new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
     @PostMapping("/products")
